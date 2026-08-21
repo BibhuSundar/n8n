@@ -1,0 +1,306 @@
+{
+  "name": "ReelFlow_Facebook_Feed",
+  "nodes": [
+    {
+      "parameters": {
+        "httpRequestMethod": "POST",
+        "graphApiVersion": "v25.0",
+        "node": "259967807191511",
+        "edge": "feed",
+        "options": {
+          "queryParameters": {
+            "parameter": [
+              {
+                "name": "message",
+                "value": "={{ $json.output }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.facebookGraphApi",
+      "typeVersion": 1,
+      "position": [
+        448,
+        -64
+      ],
+      "id": "5d69fcdd-8b51-482e-817f-7116267ddf40",
+      "name": "Facebook Graph API",
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "9ZSk4b7Vf403iBM2",
+          "name": "Facebook Graph account_Page"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1t5ia9CreNd4RWiHh-jm4Xb6DlozbUO44lbTTBF-ehz4",
+          "mode": "list",
+          "cachedResultName": "Reels_Planning",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1t5ia9CreNd4RWiHh-jm4Xb6DlozbUO44lbTTBF-ehz4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1448848049,
+          "mode": "list",
+          "cachedResultName": "facebook_feed",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1t5ia9CreNd4RWiHh-jm4Xb6DlozbUO44lbTTBF-ehz4/edit#gid=1448848049"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "status",
+              "lookupValue": "Ready"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": false
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -160,
+        -64
+      ],
+      "id": "590918d6-8b47-41c1-9439-e7e9c2d00f2b",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ec69gGAUCaOlOnev",
+          "name": "Google Sheets account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Topic :  {{ $json.topic }}\nLanguage :{{ $json.language }}\n ",
+        "options": {
+          "systemMessage": "Yes. We can make the prompt flexible so you provide Topic + Language, and it generates only the final Facebook Feed quote.\nAct as an expert Facebook Feed Quote Writer specializing in inspirational, emotional, spiritual, motivational, relationship, life, and social-awareness content.\nI will provide two inputs:\nTopic: [My topic]\nLanguage: [Hindi / English / Odia / Bengali / Marathi / Telugu / Tamil / Kannada / Any other language]\nYour task is to create ONE original, meaningful, and shareable Facebook Feed quote/message based specifically on my topic.\n\nCONTENT RULES\nWrite ONLY in the language I specify.\nKeep the message directly connected to the topic.\nLength: 2–4 short lines.\nMake it emotional, meaningful, natural, and easy to understand.\nMake it suitable for a Facebook Feed.\nUse simple, powerful words.\nThe message should feel authentic and thought-provoking.\nFor spiritual/God/Krishna topics, keep the message respectful and devotional.\nFor social topics, make it positive and socially meaningful.\nFor motivational topics, make it inspiring without sounding generic.\nFor emotional topics, make it heartfelt and relatable.\nOUTPUT RULE\nReturn ONLY the final quote/message.\nDo NOT provide:\n\nTitle\nExplanation\nDialogue\nStory\nHashtags\nCaption\nEmojis\nTranslation\nMultiple options\nEvery time I provide a new Topic and Language, create a fresh and original quote specifically for that topic.\n\nINPUT FORMAT\nTopic: [Your topic]\nLanguage: [Your language]\nWait for my Topic and Language.\nFor example, you can simply give me:\nTopic: भगवान कृष्ण ने हमें मुश्किल समय में क्या सिखाया?\nLanguage: Hindi\nAnd I will return only the Facebook-ready quote."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        64,
+        -64
+      ],
+      "id": "8d8653f5-acb5-4490-a60f-71eca390de5c",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        64,
+        128
+      ],
+      "id": "e0881541-9faf-45a3-a9a3-afe0d0df10a7",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "JxMH9lEMXQIe264M",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1t5ia9CreNd4RWiHh-jm4Xb6DlozbUO44lbTTBF-ehz4",
+          "mode": "list",
+          "cachedResultName": "Reels_Planning",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1t5ia9CreNd4RWiHh-jm4Xb6DlozbUO44lbTTBF-ehz4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1448848049,
+          "mode": "list",
+          "cachedResultName": "facebook_feed",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1t5ia9CreNd4RWiHh-jm4Xb6DlozbUO44lbTTBF-ehz4/edit#gid=1448848049"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{ $('Get row(s) in sheet').item.json.row_number }}",
+            "status": "Posted",
+            "quote": "={{ $('AI Agent').item.json.output }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "topic",
+              "displayName": "topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "language",
+              "displayName": "language",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "quote",
+              "displayName": "quote",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        640,
+        -64
+      ],
+      "id": "a774dc56-3c53-443c-bff2-3e9734bab7e3",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ec69gGAUCaOlOnev",
+          "name": "Google Sheets account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 8,
+              "triggerAtMinute": 15
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -432,
+        -64
+      ],
+      "id": "88a8fa7f-e3f7-4fea-8470-29f1312fe6af",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Facebook Graph API": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Facebook Graph API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "efd4d3d7-90ec-4900-9305-ef5d150e1920",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7817e5bf8a492626ae91ae546d3585a59ea7e009dbeb3a407bcfc7d600901281"
+  },
+  "nodeGroups": [],
+  "id": "N179Gq4To784p46Z",
+  "tags": []
+}
